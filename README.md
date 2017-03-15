@@ -18,8 +18,14 @@ Your SD Card should have the same version of the OS on it as the ARTIK-5 is alre
 It will re-partition your SD Card to expand partition 3 to be as large as possible. In case there are some odd layout characteristics, it will find the existing first sector of partition 3, and the total number of available secotrs, and calculate the correct partition map from there. 
 
 In order to catch any customizations you may have done, the script will ask you 2 questions:
-**Enter additonal (non-recursive) Directory: ** Enter any directories you wish to be preserved **NON-RECURSIVELY** So really it will just save the place-holder of the directory. Hit <enter> to end that.
-**Enter additonal (recursive) Directory or File: ** Any directory entered here will be added, recursively, to the archive. Single files will also be added. Again, hit <enter> on a blank line to end.
+
+**Enter additonal (non-recursive) Directory: ** 
+
+Enter any directories you wish to be preserved **NON-RECURSIVELY** So really it will just save the place-holder of the directory. Hit <enter> to end that.
+
+**Enter additonal (recursive) Directory or File:** 
+
+Any directory entered here will be added, recursively, to the archive. Single files will also be added. Again, hit <enter> on a blank line to end.
 
 It **will** take a very long time to run, depending on how much you've added to your system
 
