@@ -1,4 +1,19 @@
 #!/usr/bin/env bash
+#
+#    Copyright 2017 David G. Simmons
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 
 # The name of the tar file
 TARFILE=/mnt/SD3/rootfs.tar
@@ -33,13 +48,9 @@ w
 EOF
 
 sync; sync
-
 e2fsck -f -y ${DEV}p3
 resize2fs ${DEV}p3
-
 sync; sync
-
-
 echo "Resize complete"
 
 # Now mount the filesystem
@@ -115,13 +126,8 @@ fi
 
 cd /
 echo "Backing up root file system. This will take some time."
-
-
 touch $TARFILE
-
-
-
-
+# Add all the non-recursive stuff ... 
 for f in $ADD_DIRS ; do
     if [ $pv ]; then 
         if [ -d $f -o -f $f ]; then
@@ -136,6 +142,7 @@ for f in $ADD_DIRS ; do
 done 
 echo  "Done with directories                                     "
 
+# Now for all the recursive stuff. This takes forever
 for f in $ADD_FILES ; do
     if [ $pv ]; then
         if [ -d $f -o -f $f ]; then
@@ -151,6 +158,7 @@ for f in $ADD_FILES ; do
 done 
 echo  "Done with files                                          "
 
+# Now compress the whole mess. Also takes forever.
 if [ -f $pv ]; then 
     gzip /mnt/SD3/rootfs.tar | pv -N "Compressing the rootfs"
 else
