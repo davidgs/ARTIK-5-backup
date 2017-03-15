@@ -3,30 +3,23 @@
 # The name of the tar file
 TARFILE=/mnt/SD3/rootfs.tar
 
-# Progress spinner for feedback
-sp="/-\|"
-sc=0
-spin() {
-   printf "\b${sp:sc++:1}"
-   ((sc==${#sp})) && sc=0
-}
-endspin() {
-   printf "\r%s\n" "$@"
-}
-
 # Expand partition 3 of the SD Card to make it as large as possible
-start_sector=`fdisk -l /dev/mmcblk1 | grep mmcblk1p3 | awk '{print $2}'`
-end_sector=`fdisk -l /dev/mmcblk1 | awk 'NR==1 {print $7}'`
-
-end_sector=$((end_sector - 1))
-echo $end_sector
+# First calculate the right size for it
 DEV="/dev/mmcblk1"
-echo "Resizing partition map for $DEV"
+
+# Where does partition 3 start now?
+start_sector=`fdisk -l $DEV | grep ${DEV}p3 | awk '{print $2}'`
+# What's the max number of sectors?
+end_sector=`fdisk -l DEV="/dev/mmcblk1" | awk 'NR==1 {print $7}'`
+# one less ... 
+end_sector=$((end_sector - 1))
+# Make sure it's not mounted...
 for disk in ${DEV}*
 do
 	umount $disk
 done
-
+# Now resize it accordingly
+echo "Resizing partition map for $DEV"
 fdisk $DEV <<EOF
 p
 d
@@ -48,24 +41,28 @@ sync; sync
 
 
 echo "Resize complete"
+
+# Now mount the filesystem
 echo "Mounting new Filesystem..."
 if [ ! -d /mnt/SD3 ]; then
     mkdir /mnt/SD3
 fi
 mount ${DEV}p3 /mnt/SD3
+
+# Look for pv. If it's not installed, ask if they want to install it.
 pv=`which pv`
 if [ ! -f $pv ]; then
-    echo "Minimal feedback provided ... be patient."
-    echo "run dnf install pv and re-run this script for "
-    echo "beter feedback on progress."
-    echo "Type ^C to exit now."
-    for i in {1..8}
-    do
-       spin
-       sleep 1
-    done
-    endspin
-    
+    echo "pv is not installed. This limits feedback."
+    read -p 'Install pv now? [Y|n]: ' yn
+    if [ ! -z $yn ]; then
+        dnf install -y pv
+        pv=`which pv`
+    elif [ $yn == 'y' -o $yn == 'Y' ]; then
+        dnf install -y pv
+        pv=`which pv`
+    else
+        echo "User feedback will be minimal."
+    fi
 fi
 
 # Move the old rootfs.tar.gz in case we need it again
