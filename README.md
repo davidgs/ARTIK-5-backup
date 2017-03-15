@@ -19,13 +19,13 @@ It will re-partition your SD Card to expand partition 3 to be as large as possib
 
 In order to catch any customizations you may have done, the script will ask you 2 questions:
 
-**Enter additonal (non-recursive) Directory: ** 
+**Enter additonal (non-recursive) Directory:** 
 
-Enter any directories you wish to be preserved **NON-RECURSIVELY** So really it will just save the place-holder of the directory. Hit <enter> to end that.
+Enter any directories you wish to be preserved **NON-RECURSIVELY** So really it will just save the place-holder of the directory. Hit *enter* to end that.
 
 **Enter additonal (recursive) Directory or File:** 
 
-Any directory entered here will be added, recursively, to the archive. Single files will also be added. Again, hit <enter> on a blank line to end.
+Any directory entered here will be added, recursively, to the archive. Single files will also be added. Again, hit *enter* on a blank line to end.
 
 It **will** take a very long time to run, depending on how much you've added to your system
 
