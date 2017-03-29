@@ -49,20 +49,20 @@ EOF
 
 sync; sync
 e2fsck -f -y ${DEV}p3
-resize2fs ${DEV}p3
-sync; sync
-echo "Resize complete"
-
 # Now mount the filesystem
 echo "Mounting new Filesystem..."
 if [ ! -d /mnt/SD3 ]; then
     mkdir /mnt/SD3
 fi
 mount ${DEV}p3 /mnt/SD3
+resize2fs ${DEV}p3
+sync; sync
+echo "Resize complete"
+
 
 # Look for pv. If it's not installed, ask if they want to install it.
-pv=`which pv`
-if [ ! -f $pv ]; then
+pv=`which pv 2>&1`
+if [[ $pv == which* ]]; then
     echo "pv is not installed. This limits feedback."
     read -p 'Install pv now? [Y|n]: ' yn
     if [ ! -z $yn ]; then
